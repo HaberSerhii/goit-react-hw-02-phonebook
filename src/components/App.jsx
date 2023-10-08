@@ -1,23 +1,81 @@
-import user from 'dates/user.json'
-import downloads from 'dates/downloads.json'
-import friends from 'dates/friends.json'
-import transactions from 'dates/transactions.json'
+import { Component } from 'react';
+import { nanoid } from 'nanoid';
+import { Report } from 'notiflix';
+import { Section } from './Section/Section.styled';
+import { FormAddContact } from './Form/Form';
+import { ContactList } from './ContactList/ContactList';
+import { EmptyEl } from './ContactList/ContactList.styled';
+import Filter from './Filter/Filter';
 
-import { Profile } from './Profile/Profile';
-import { Statistics } from './Statistics/Statistics';
-import { FriendList } from './FriendList/FriendList';
-import { TransactionHistory } from './TransactionHistory/TransactionHistory';
+export class App extends Component {
+  state = {
+    contacts: [
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+    ],
+    filter: '',
+  };
 
-import styles from './App.module.css'
+  addContact = data => {
+    const identicalContactName = this.state.contacts.some(
+      ({ name }) => data.name === name
+    );
+    if (identicalContactName) {
+      return Report.warning(
+        'WARNING',
+        `${data.name} is already in contacts`,
+        'ok'
+      );
+    }
+ 
+    const contact = {
+      ...data,
+      id: nanoid(),
+    };
+    this.setState(({ contacts }) => ({
+      contacts: [contact, ...contacts],
+    }));
+  };
 
+  deleteContact = contactId => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== contactId),
+    }));
+  };
 
-export const App = () => {
-  return (
-    <main className={styles.main}>
-      <Profile user={user} />
-      <Statistics download={downloads} />
-      <FriendList friends={friends} />
-      <TransactionHistory item={transactions} />
-    </main>
-  );
-};
+  changeFilter = e => {
+    this.setState({ filter: e.currentTarget.value.trim() });
+  };
+
+  getVisibleContacts = () => {
+    const { contacts, filter } = this.state;
+    const normalizedFilter = filter.toLowerCase();
+  
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
+  render() {
+    const { filter, contacts } = this.state;
+    const visibleContacts = this.getVisibleContacts();
+
+    return (
+      <Section>
+        <h2>Phonebook</h2>
+        <FormAddContact addContact={this.addContact} contacts={contacts} />
+        <Filter value={filter} onChange={this.changeFilter} />
+        {visibleContacts.length ? (
+          <ContactList
+            contacts={visibleContacts}
+            onDeleteContact={this.deleteContact}
+          />
+        ) : (
+          <EmptyEl>Not found</EmptyEl>
+        )}
+      </Section>
+    );
+  }
+}
