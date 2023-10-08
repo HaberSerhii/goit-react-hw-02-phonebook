@@ -1,0 +1,9 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 50px;
+  width: 1024px;
+  margin: 0 auto;
+  background-color: cadetblue;
+}

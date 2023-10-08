@@ -1,0 +1,25 @@
+.transactionSection {
+  width: 385px;
+  margin: 0 auto;
+}
+
+.transactionHistory {
+  width: 385px;
+}
+
+.transactionTitleList {
+  height: 60px;
+  background-color: lightblue;
+  color: white;
+  font-size: medium;
+  font-weight: 600;
+}
+th {
+  width: 95px;
+}
+
+td {
+  text-align: center;
+  height: 20px;
+  background-color: antiquewhite;
+}
