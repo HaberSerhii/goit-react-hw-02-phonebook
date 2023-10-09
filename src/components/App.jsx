@@ -2,7 +2,7 @@ import { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { Report } from 'notiflix';
 import { Section } from './Section/Section.styled';
-import { FormAddContact } from './Form/Form';
+import MyForm from './Form/Form';
 import { ContactList } from './ContactList/ContactList';
 import { EmptyEl } from './ContactList/ContactList.styled';
 import Filter from './Filter/Filter';
@@ -65,7 +65,7 @@ export class App extends Component {
     return (
       <Section>
         <h2>Phonebook</h2>
-        <FormAddContact addContact={this.addContact} contacts={contacts} />
+        <MyForm onSubmit={this.addContact} />
         <Filter value={filter} onChange={this.changeFilter} />
         {visibleContacts.length ? (
           <ContactList
